@@ -11,6 +11,7 @@ Points: 250
     * [**CRC code mismatch**](#crc-code-mismatch)
     * [**Invalid chunk length**](#invalid-chunk-length)
     * [**Fixed file**](#fixed-file)
+  * [Flag](#flag)
 
 ## Description
 We found this [file](files/mystery). Recover the flag.
