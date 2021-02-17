@@ -54,3 +54,22 @@ File: mystery (202940 bytes)
 ```
 
 Prior to fixing the file header, ```pngcheck``` will not recognise the file as a PNG file. Now, it recognised the file perfectly. However, a new type of error is raised based on the output.
+
+According to the output, there is an invalid chunk name ```C"DR```. We can assume that it should be the ```IHDR``` chunk, which is one of the critical chunks of a PNG file and it is located right after the file header.
+
+![IHDR chunk](images/2.png)
+
+```
+$ pngcheck -v mystery
+File: mystery (202940 bytes)
+  chunk IHDR at offset 0x0000c, length 13
+    1642 x 1095 image, 24-bit RGB, non-interlaced
+  chunk sRGB at offset 0x00025, length 1
+    rendering intent = perceptual
+  chunk gAMA at offset 0x00032, length 4: 0.45455
+  chunk pHYs at offset 0x00042, length 9: 2852132389x5669 pixels/meter
+  CRC error in chunk pHYs (computed 38d82c82, expected 495224f0)
+ERRORS DETECTED in mystery
+```
+
+Now, we managed to fix the ```IHDR``` chunk, but another error is raised.
