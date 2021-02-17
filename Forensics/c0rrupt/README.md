@@ -9,6 +9,8 @@ Points: 250
     * [**File header**](#file-header)
     * [**Invalid chunk name**](#invalid-chunk-name)
     * [**CRC code mismatch**](#crc-code-mismatch)
+    * [**Invalid chunk length**](#invalid-chunk-length)
+    * [**Fixed file**](#fixed-file)
 
 ## Description
 We found this [file](files/mystery). Recover the flag.
@@ -125,3 +127,54 @@ ERRORS DETECTED in mystery
 ```
 
 Now, let's fix the next error!
+
+### **Invalid chunk length**
+```pngcheck``` does not specify which chunk has the invalid length.
+If we assume that ```pHYs``` is the final ancillary chunk in this PNG file, the next chunk is most likely to be the first ```IDAT``` chunk, which is another critical chunk that represents the image data.
+
+![IDAT chunk](images/4.png)
+
+According to [this website](http://www.libpng.org/pub/png/book/chapter08.html#png.ch08.div.4), each ```IDAT``` chunk can contain no more than 2 gigabytes of data. However, the size of this chunk, which is represented by the 4 bytes preceding the chunk type, shows ```AA AA FF A5``` or 2863333285, which is greater than 2 gigabytes.
+
+Therefore, we need to count the actual size of the first ```IDAT``` chunk by getting the location of the next ```IDAT``` chunk and computing the distance between them. This can be done as multiple ```IDAT``` chunks need appear consecutively without any intervening chunk, according to [here](http://www.libpng.org/pub/png/spec/1.2/PNG-Chunks.html#C.pHYs).
+
+```
+$ xxd mystery | grep IDAT
+00000050: 5224 f0aa aaff a549 4441 5478 5eec bd3f  R$.....IDATx^..?
+00010000: 6927 db59 0000 fff4 4944 4154 3697 4678  i'.Y....IDAT6.Fx
+00020000: ba6b c1fa 0000 fff4 4944 4154 d5df c0b7  .k......IDAT....
+00030000: 5997 d200 0000 18a0 4944 4154 bb9d f54c  Y.......IDAT...L
+```
+
+We can see that the first ```IDAT``` is located at offset ```0x57``` and the second one is located at offset ```0x10008```. Thus, the distance is ```0xFFB1```.
+
+However, we need to exclude the chunk type of the first ```IDAT``` chunk (4 bytes), the chunk type of the second ```IDAT``` chunk (4 bytes) and the length of the second ```IDAT``` chunk (4 bytes) as they should not be included in the calculation of the chunk length.
+In total, we need to exclude ```0x4 + 0x4 + 0x4 = 0xC``` from ```0xFFB1```. The result is ```0xFFA5```.
+
+![IDAT chunk length](images/5.png)
+
+```
+$ pngcheck -v mystery
+File: mystery (202940 bytes)
+  chunk IHDR at offset 0x0000c, length 13
+    1642 x 1095 image, 24-bit RGB, non-interlaced
+  chunk sRGB at offset 0x00025, length 1
+    rendering intent = perceptual
+  chunk gAMA at offset 0x00032, length 4: 0.45455
+  chunk pHYs at offset 0x00042, length 9: 5669x5669 pixels/meter (144 dpi)
+  chunk IDAT at offset 0x00057, length 65445
+    zlib: deflated, 32K window, fast compression
+  chunk IDAT at offset 0x10008, length 65524
+  chunk IDAT at offset 0x20008, length 65524
+  chunk IDAT at offset 0x30008, length 6304
+  chunk IEND at offset 0x318b4, length 0
+No errors detected in mystery (9 chunks, 96.3% compression).
+```
+
+### **Fixed file**
+Once we fixed the chunk length, there should be no more errors and we can view the PNG file to get the flag.
+
+![Fixed PNG file](images/6.png)
+
+## Flag
+picoCTF{c0rrupt10n_1847995}
