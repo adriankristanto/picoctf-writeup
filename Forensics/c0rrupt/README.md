@@ -1,6 +1,15 @@
 # c0rrupt
 Points: 250
 
+## Table of Contents
+  * [Description](#description)
+  * [Hints](#hints)
+  * [Solution](#solution)
+    * [**Tools**](#tools)
+    * [**File header**](#file-header)
+    * [**Invalid chunk name**](#invalid-chunk-name)
+    * [**CRC code mismatch**](#crc-code-mismatch)
+
 ## Description
 We found this [file](files/mystery). Recover the flag.
 
@@ -8,6 +17,8 @@ We found this [file](files/mystery). Recover the flag.
 Try fixing the file header
 
 ## Solution
+
+### **Tools**
 Firstly, we can try to use the [```file```](https://linux.die.net/man/1/file) command to detect the file type. However, it does not return anything useful.
 
 ```
@@ -19,6 +30,7 @@ Next, we can try to use a hex editor to analyse the file. In this case, I used [
 
 ![Hex Fiend](images/0.png)
 
+### **File header**
 We can determine that the file is a PNG file. According to [this website](http://www.libpng.org/pub/png/spec/1.2/PNG-Contents.html), a PNG file contains several chunk types, such as sRGB, gAMA, pHYS (which we can see from the image above), IDAT, and IEND, and they can be found within this file.
 
 ```
@@ -55,6 +67,7 @@ File: mystery (202940 bytes)
 
 Prior to fixing the file header, ```pngcheck``` will not recognise the file as a PNG file. Now, it recognised the file perfectly. However, a new type of error is raised based on the output.
 
+### **Invalid chunk name**
 According to the output, there is an invalid chunk name ```C"DR```. We can assume that it should be the ```IHDR``` chunk, which is one of the critical chunks of a PNG file and it is located right after the file header.
 
 ![IHDR chunk](images/2.png)
@@ -74,6 +87,7 @@ ERRORS DETECTED in mystery
 
 Now, we managed to fix the ```IHDR``` chunk, but another error is raised.
 
+### **CRC code mismatch**
 According to the output, the computed CRC code does not match the code specified in the ```pHYs``` chunk.
 
 In [this website](http://www.libpng.org/pub/png/spec/1.2/PNG-Structure.html#PNG-file-signature), it is specified that each chunk has four parts, which are:
@@ -96,3 +110,18 @@ Furthermore, in [this website's Table 11-4], the ```pHYs``` chunk data consists 
 The Pixels per unit, x axis seems to be the problem. In the ```pngcheck``` output, there are way too many pixels per meter (2852132389) on the x axis when compared to the y axis (5669). We can try to match pixels per unit on the x axis with the pixels per unit on the y axis.
 
 ![pHYs chunk](images/3.png)
+
+```
+$ pngcheck -v mystery
+File: mystery (202940 bytes)
+  chunk IHDR at offset 0x0000c, length 13
+    1642 x 1095 image, 24-bit RGB, non-interlaced
+  chunk sRGB at offset 0x00025, length 1
+    rendering intent = perceptual
+  chunk gAMA at offset 0x00032, length 4: 0.45455
+  chunk pHYs at offset 0x00042, length 9: 5669x5669 pixels/meter (144 dpi)
+:  invalid chunk length (too large)
+ERRORS DETECTED in mystery
+```
+
+Now, let's fix the next error!
