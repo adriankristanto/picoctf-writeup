@@ -73,3 +73,26 @@ ERRORS DETECTED in mystery
 ```
 
 Now, we managed to fix the ```IHDR``` chunk, but another error is raised.
+
+According to the output, the computed CRC code does not match the code specified in the ```pHYs``` chunk.
+
+In [this website](http://www.libpng.org/pub/png/spec/1.2/PNG-Structure.html#PNG-file-signature), it is specified that each chunk has four parts, which are:
+* Length of the chunk (4 bytes)
+  * E.g. the ```pHYs``` chunk length is ```00 00 00 09```
+* Chunk Type (4 bytes)
+  * E.g. the ```pHYs``` chunk type is ```70 48 59 73```
+* Chunk Data
+* CRC (4 bytes)
+  * E.g. the ```pHYs``` CRC is ```49 52 24 F0```
+
+Furthermore, in [this website's Table 11-4], the ```pHYs``` chunk data consists of:
+* Pixels per unit, x axis (4 bytes)
+  * In this case, ```AA 00 16 25```
+* Pixels per unit, y axis (4 bytes)
+  * In this case, ```00 00 16 25```
+* Unit specifier (1 byte)
+  * In this case, ```01```
+
+The Pixels per unit, x axis seems to be the problem. In the ```pngcheck``` output, there are way too many pixels per meter (2852132389) on the x axis when compared to the y axis (5669). We can try to match pixels per unit on the x axis with the pixels per unit on the y axis.
+
+![pHYs chunk](images/3.png)
