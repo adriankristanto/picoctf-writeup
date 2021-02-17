@@ -1,4 +1,4 @@
 # **Challenges**
 
 ## **Forensics**
-1. [c0rrupt](https://github.com/adriankristanto/picoctf-writeup/Forensics/c0rrupt)
+1. <a href="Forensics/c0rrupt">c0rrupt</a>
