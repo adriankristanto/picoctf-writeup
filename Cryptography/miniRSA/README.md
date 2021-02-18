@@ -87,6 +87,7 @@ Therefore, to obtain the message ```m```, we can use the following equation:
 ![RSA equation without mod n](images/RSA_2.jpg)
 
 Which can be implemeted easily in Python.
+[reference](https://stackoverflow.com/questions/49401472/how-to-find-the-cube-root-in-python/49401629)
 
 ```python
 # round the result, otherwise, it won't return the correct type
