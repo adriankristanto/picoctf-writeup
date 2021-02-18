@@ -14,7 +14,7 @@ Points: 250
   * [Flag](#flag)
 
 ## Description
-We found this [file](files/mystery). Recover the flag.
+1. <details><summary>Hint 1</summary>We found this [file](files/mystery). Recover the flag.</details>
 
 ## Hints
 Try fixing the file header
