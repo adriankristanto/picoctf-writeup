@@ -178,4 +178,7 @@ Once we fixed the chunk length, there should be no more errors and we can view t
 ![Fixed PNG file](images/6.png)
 
 ## Flag
+<details>
+<summary>Flag</summary>
 picoCTF{c0rrupt10n_1847995}
+</details>
