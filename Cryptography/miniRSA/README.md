@@ -6,6 +6,8 @@ points: 300
   * [Hints](#hints)
   * [Solution](#solution)
     * [**Tools**](#tools)
+    * [**Breaking the encryption**](#breaking-the-encryption)
+    * [**Completed Script**](#completed-script)
   * [Flag](#flag)
 
 ## Description
@@ -66,6 +68,8 @@ e = decimal.Decimal(re.search(r'e: ([0-9])', content).group(1))
 c = decimal.Decimal(re.search(r'\(c\): ([0-9]+)', content).group(1))
 ```
 
+### **Breaking the encryption**
+
 The challenge description refers to the value of ```e```, which is a really small number, and this can affect the security of the RSA algorithm.
 
 Usually, breaking RSA encryption is infeasible as it requires us to break ```n``` into ```p``` and ```q```, i.e. ```n = p * q```, to obtain the decryption key ```d```. The security of RSA comes from this factorisation problem, which is known to be practically difficult.
@@ -100,7 +104,8 @@ flag = bytearray.fromhex(hex(m)[2:]).decode()
 print(flag)
 ```
 
-Completed script: [miniRSA.py](files/miniRSA.py)
+### **Completed script**
+Completed Python script: [miniRSA.py](files/miniRSA.py)
 
 ## Flag
 <details>
