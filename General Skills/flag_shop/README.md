@@ -5,6 +5,10 @@ Points: 300
   * [Description](#description)
   * [Hints](#hints)
   * [Solution](#solution)
+    * [**Vulnerable code block**](#vulnerable-code-block)
+    * [**The vulnerability**](#the-vulnerability)
+    * [**Exploiting the vulnerability**](#exploiting-the-vulnerability)
+    * [**Input justification**](#input-justification)
   * [Flag](#flag)
   
 ## Description
@@ -17,6 +21,8 @@ There's a flag shop selling stuff, can you buy a flag? [Source](files/store.c). 
     </details>
 
 ## Solution
+
+### **Vulnerable code block**
 From the given [source code](files/store.c), it seems that the following code block contains a vulnerability that we can exploit to purchase the flag.
 
 ```C
@@ -38,6 +44,7 @@ if(number_flags > 0){
 
 Although it makes sure that ```number_flags``` cannot be negative, it simply multiplies ```number_flags``` by ```900``` to compute ```total_cost``` without further validation. This operation can lead to an [integer overflow](https://en.wikipedia.org/wiki/Integer_overflow) vulnerability.
 
+### **The vulnerability**
 ```int``` datatype in C has an upper limit, which is [2147483647]([2147483647](https://www.geeksforgeeks.org/int_max-int_min-cc-applications/)) or ```(2^31) - 1```. If we have the following program
 
 ```C
@@ -51,6 +58,7 @@ int main() {
 
 It will print ```-2147483648```, which is the lower limit of ```int``` datatype in C, since adding to the upper limit causes the program to wrap around to the lower limit.
 
+### **Exploiting the vulnerability**
 One solution is to input the following number for ```number_flags``` (the number is computed with Python)
 
 ```Python
@@ -58,6 +66,9 @@ One solution is to input the following number for ```number_flags``` (the number
 2386095
 ```
 
+Our main goal here is to make ```total_cost``` a negative number and make ```account_balance``` a large positive number.
+
+### **Input justification**
 Here, ```(2^31) / 900``` will pass the first check ```if(number_flags > 0)``` as it is a positive number and it does not exceed the upper limit of ```int```. 
 
 When it is multiplied by 900 to compute the total cost,
