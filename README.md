@@ -5,3 +5,6 @@
 
 ## **Cryptography**
 1. <a href="Cryptography/miniRSA">miniRSA</a>
+
+## **General Skills**
+1. <a href="General Skills/flag_shop">flag_shop</a>
