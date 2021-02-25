@@ -49,3 +49,7 @@ As mentioned previously, the complete flag is spread out into several packets in
 In the screenshot above, each packet contains only 1 byte of data as shown by ```Len=1```. This means that packet 63 contains ```p```, packet 69 contains ```i``` and so on.
 
 ## Flag
+<details>
+<summary>Flag</summary>
+picoCTF{StaT31355_636f6e6e}
+</details>
