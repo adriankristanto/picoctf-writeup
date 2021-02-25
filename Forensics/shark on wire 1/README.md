@@ -4,6 +4,9 @@ Points: 150
 ## Table of Contents
   * [Description](#description)
     * [**Tools**](#tools)
+    * [**Searching for a packet**](#searching-for-a-packet)
+    * [**Following a stream**](#following-a-stream)
+    * [**Note**](#note)
   * [Hints](#hints)
   * [Solution](#solution)
   * [Flag](#flag)
@@ -22,6 +25,7 @@ Firstly, we can use [Wireshark](https://www.wireshark.org/download.html) to open
 
 ![Wireshark](images/0.png)
 
+### **Searching for a packet**
 Next, we can try to find the packet that potentially contain the flag by clicking ```Edit > Find Packet...```. Then, set ```Display filter``` to ```String``` and change ```Packet list``` to ```Packet bytes```. In this case, we can search for the string ```pico``` and click ```Find```.
 
 ![Find Packet...](images/1.png)
@@ -32,6 +36,7 @@ Fortunately, there is a packet that contains the complete string ```pico```.
 
 ![Packet No. 55](images/2.png)
 
+### **Following a stream**
 The search result brings us to packet number 55. We can try to follow the stream by right clicking packet 55, select ```Follow > UDP Stream``` and another window will open.
 
 ![Stream 5](images/3.png)
@@ -42,6 +47,7 @@ It doesn't seem to contain the flag that we are looking for. What we can try to 
 
 The flag can be found in stream 6.
 
+### **Note**
 As mentioned previously, the complete flag is spread out into several packets in stream 6. 
 
 ![Stream 6](images/5.png)
